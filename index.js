@@ -6,7 +6,7 @@ const request = require('request')
 
 const app = express()
 
-token = "EAAFihsSyj70BACyhqBqNbDbsA6ZCFULsz1DnLTHxDCzen6QrRcwpFUH3oAlurpsytk3pBZAM1DfObiVPClhFSssOApV6DQJdcHRj9ZAMiZBlyVVonCQR61w9CUyVZAbqR9Qu8QOh4Q2SMwHyIK9aaji3Pk13Y3YWZAtsmSu8FcGwZDZD"
+let token = "EAAFihsSyj70BACyhqBqNbDbsA6ZCFULsz1DnLTHxDCzen6QrRcwpFUH3oAlurpsytk3pBZAM1DfObiVPClhFSssOApV6DQJdcHRj9ZAMiZBlyVVonCQR61w9CUyVZAbqR9Qu8QOh4Q2SMwHyIK9aaji3Pk13Y3YWZAtsmSu8FcGwZDZD"
 
 app.set('port', (process.env.PORT || 5000))
 
@@ -29,7 +29,7 @@ app.get('/webhook/', (req, res) => {
 })
 
 app.post('/webhook/', (req, res) => {
-	let messaging_events = req.body.entry[0].messaging_events
+	let messaging_events = req.body.entry[0].messaging
 	for (let i = 0; i < messaging_events.length; i++) {
 		let event = messaging_events[i]
 		let sender = event.sender.id
@@ -45,10 +45,10 @@ function sendText(sender, text) {
 	let messageData = {text: text}
 	request({
 		url: "https://graph.facebook.com/v2.6/me/messages",
-		qs: {access_token, token}
-		method: "POST"
+		qs: {access_token: token},
+		method: "POST",
 		json: {
-			receipt: {id: sender},
+			recipient: {id: sender},
 			message: messageData
 		}
 	}, (error, response, body) => {
