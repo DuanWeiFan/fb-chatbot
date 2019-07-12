@@ -4,33 +4,27 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const request = require('request')
 const crawler = require('./crawler')
+const helper = require('./helper')
 
 const app = express()
 
-let token = "EAAFihsSyj70BAIS1FZBcTKXcBB2BRZAMaU01JteEaSV6Hqu4ySHtvH7c1zEdokCW0645lw8ex5AcpGmd2aZCsxm2ZB6VZAgXMZCPfjxT6RMerraU9iHGe2Ljy6hIgVZBEIV1lnmIOY8XmmZApRqdgzvKMoO5kpTCfydGMnYjiooNhwZDZD"
-
 app.set('port', (process.env.PORT || 5000))
 
+// Middlewares
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 
+function init() {
+	crawler.init()
+}
 
-let topNews
-let lastUpdateTime = new Date();
+// init modules
+init()
+
 // ROUTES
-
 app.get('/', async (req, res) => {
-	// res.send("Hi I'm a chatbot")
-	let currTime = new Date();
-	const domain = 'https://www.reddit.com'
-	const url = '/r/nba/'
-	let timeDiff = Math.round((currTime - lastUpdateTime) / 1000 ) // seconds
-	if (typeof topNews == "undefined" || timeDiff > 10) {
-		topNews = await crawler.getTopNews(domain, url)	
-		lastUpdateTime = new Date();
-	}
+	let topNews = await crawler.getTopNews()
 	res.send(topNews)
-	// res.send(topNews)
 })
 
 // Facebook
@@ -42,68 +36,30 @@ app.get('/webhook/', (req, res) => {
 	res.send("Wrong Token")
 })
 
-app.post('/webhook/', (req, res) => {
+app.post('/webhook/', async (req, res) => {
 	let messaging_events = req.body.entry[0].messaging
 	for (let i = 0; i < messaging_events.length; i++) {
 		let event = messaging_events[i]
 		let sender = event.sender.id
 		if (event.message && event.message.text) {
 			let text = event.message.text
-			sendText(sender, "Echoing: " + text.substring(0, 100))
-			sendButton(sender)
+			text = text.toLowerCase()
+			console.log("msg: " + text)
+			if (text.contains("nba") || text.contains("news")) {
+				console.log("msg contains nba")
+				let topNews = await crawler.getTopNews()
+				helper.sendList(sender, topNews)
+			} else {
+				// Echo text
+				helper.sendText(sender, "Echoing: " + text.substring(0, 100))
+				// Test button template
+				helper.sendBottons(sender)
+			}
+			
 		}
 	}
 	res.sendStatus(200)
 })
-
-
-function sendButton(sender) {
-	let messageData = {
-		attachment: {
-			type: "template",
-			payload: {
-				template_type: "button",
-				text: "what's up",
-				buttons: [
-					{
-						type: "web_url",
-						url: "https://www.google.com",
-						title: "Visit Google"
-					},
-					{
-						type: "web_url",
-						url: "https://www.amazon.com/",
-						title: "Visit Amazon"
-					}
-				]
-			}
-		}
-	}
-	send(sender, messageData)
-}
-
-function sendText(sender, text) {
-	let messageData = {text: text}
-	send(sender, messageData)
-}
-
-function send(sender, messageData) {
-	request({
-		url: "https://graph.facebook.com/v2.6/me/messages",
-		qs: {access_token: token},
-		method: "POST",
-		json: {
-			recipient: {id: sender},
-			message: messageData
-		}
-	}, (error, response, body) => {
-		if (error) {
-			console.log("sending error")
-		} else if (response.body.error) {
-			console.log("response body error")
-		}
-	})
-}
 
 app.listen(app.get('port'), () => {
 	console.log("running on port " + app.get('port'))
