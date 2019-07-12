@@ -50,13 +50,44 @@ app.post('/webhook/', (req, res) => {
 		if (event.message && event.message.text) {
 			let text = event.message.text
 			sendText(sender, "Echoing: " + text.substring(0, 100))
+			sendButton(sender)
 		}
 	}
 	res.sendStatus(200)
 })
 
+
+function sendButton(sender) {
+	let messageData = {
+		attachment: {
+			type: "template",
+			payload: {
+				template_type: "button",
+				text: "what's up",
+				buttons: [
+					{
+						type: "web_url",
+						url: "https://www.google.com",
+						title: "Visit Google"
+					},
+					{
+						type: "web_url",
+						url: "https://www.amazon.com/",
+						title: "Visit Amazon"
+					}
+				]
+			}
+		}
+	}
+	send(sender, messageData)
+}
+
 function sendText(sender, text) {
 	let messageData = {text: text}
+	send(sender, messageData)
+}
+
+function send(sender, messageData) {
 	request({
 		url: "https://graph.facebook.com/v2.6/me/messages",
 		qs: {access_token: token},
