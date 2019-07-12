@@ -45,7 +45,7 @@ app.post('/webhook/', async (req, res) => {
 			let text = event.message.text
 			text = text.toLowerCase()
 			console.log("msg: " + text)
-			if (text.contains("nba") || text.contains("news")) {
+			if (text.includes("nba") || text.includes("news")) {
 				console.log("msg contains nba")
 				let topNews = await crawler.getTopNews()
 				helper.sendList(sender, topNews)
