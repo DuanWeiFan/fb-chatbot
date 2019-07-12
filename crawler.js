@@ -48,7 +48,6 @@ function crawlTopNews (domain, url){
 		  .then(() => {
 			  console.log("Done");
 			  resolve(array);
-			  // return array;
 		  })
 		  .catch((err) => {
 			  console.log(err);

@@ -17,7 +17,8 @@ const sendRequest = (sender, messageData) => {
 		}
 	}, (error, response, body) => {
 		if (error) {
-			console.log("sending error")
+            console.log("sending error")
+            console.log(error)
 		} else if (response.body.error) {
             console.log("response body error")
             console.log(response.body.error)
@@ -61,7 +62,6 @@ exports.sendList = (sender, topNews) => {
     let elements = new Array()
     for (let i = 0; i < Math.min(topNews.length, maximumViews); i++) {
         let element = {}
-        console.log(topNews[i])
         element.title = topNews[i].title
         element.buttons = [{
             title: "View",
@@ -86,6 +86,5 @@ exports.sendList = (sender, topNews) => {
 			}
 		}
     }
-    console.log(messageData)
     sendRequest(sender, messageData)
 }
