@@ -3,20 +3,34 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const request = require('request')
+const crawler = require('./crawler')
 
 const app = express()
 
-let token = "EAAFihsSyj70BACyhqBqNbDbsA6ZCFULsz1DnLTHxDCzen6QrRcwpFUH3oAlurpsytk3pBZAM1DfObiVPClhFSssOApV6DQJdcHRj9ZAMiZBlyVVonCQR61w9CUyVZAbqR9Qu8QOh4Q2SMwHyIK9aaji3Pk13Y3YWZAtsmSu8FcGwZDZD"
+let token = "EAAFihsSyj70BAIS1FZBcTKXcBB2BRZAMaU01JteEaSV6Hqu4ySHtvH7c1zEdokCW0645lw8ex5AcpGmd2aZCsxm2ZB6VZAgXMZCPfjxT6RMerraU9iHGe2Ljy6hIgVZBEIV1lnmIOY8XmmZApRqdgzvKMoO5kpTCfydGMnYjiooNhwZDZD"
 
 app.set('port', (process.env.PORT || 5000))
 
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 
+
+let topNews
+let lastUpdateTime = new Date();
 // ROUTES
 
-app.get('/', (req, res) => {
-	res.send("Hi I'm a chatbot")
+app.get('/', async (req, res) => {
+	// res.send("Hi I'm a chatbot")
+	let currTime = new Date();
+	const domain = 'https://www.reddit.com'
+	const url = '/r/nba/'
+	let timeDiff = Math.round((currTime - lastUpdateTime) / 1000 ) // seconds
+	if (typeof topNews == "undefined" || timeDiff > 10) {
+		topNews = await crawler.getTopNews(domain, url)	
+		lastUpdateTime = new Date();
+	}
+	res.send(topNews)
+	// res.send(topNews)
 })
 
 // Facebook
@@ -35,7 +49,7 @@ app.post('/webhook/', (req, res) => {
 		let sender = event.sender.id
 		if (event.message && event.message.text) {
 			let text = event.message.text
-			sendText(sender, "Text echo: " + text.substring(0, 100))
+			sendText(sender, "Echoing: " + text.substring(0, 100))
 		}
 	}
 	res.sendStatus(200)
@@ -61,5 +75,5 @@ function sendText(sender, text) {
 }
 
 app.listen(app.get('port'), () => {
-	console.log("running: port")
+	console.log("running on port " + app.get('port'))
 })
