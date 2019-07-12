@@ -19,7 +19,8 @@ const sendRequest = (sender, messageData) => {
 		if (error) {
 			console.log("sending error")
 		} else if (response.body.error) {
-			console.log("response body error")
+            console.log("response body error")
+            console.log(response.body.error)
 		}
 	})
 }
@@ -60,11 +61,12 @@ exports.sendList = (sender, topNews) => {
     let elements = new Array()
     for (let i = 0; i < Math.min(topNews.length, maximumViews); i++) {
         let element = {}
-        element.title = topNews.title
+        console.log(topNews[i])
+        element.title = topNews[i].title
         element.buttons = [{
             title: "View",
             type: "web_url",
-            url: topNews.url
+            url: topNews[i].url
         }]
         elements.push(element)
     }
@@ -84,5 +86,6 @@ exports.sendList = (sender, topNews) => {
 			}
 		}
     }
+    console.log(messageData)
     sendRequest(sender, messageData)
 }
