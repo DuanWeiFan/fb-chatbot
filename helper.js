@@ -57,7 +57,7 @@ exports.sendBottons = (sender) => {
 }
 
 exports.sendList = (sender, topNews) => {
-    const maximumViews = 5;
+    const maximumViews = 4;
     let elements = new Array()
     for (let i = 0; i < Math.min(topNews.length, maximumViews); i++) {
         let element = {}
@@ -77,7 +77,7 @@ exports.sendList = (sender, topNews) => {
                 template_type: "list",
                 top_element_style: "compact",
                 elements: elements,
-                butons: [{
+                buttons: [{
                     title: "View More",
                     type: "postback",
                     payload: "payload"
