@@ -42,7 +42,13 @@ app.post('/webhook/', async (req, res) => {
 	for (let i = 0; i < messaging_events.length; i++) {
 		let event = messaging_events[i]
 		let sender = event.sender.id
-		if (event.message && event.message.text) {
+		// postback
+		if (event.postback) {
+			console.log("Log PostBack Event:")
+			console.log(event.postback)
+		}
+		// message post
+		else if (event.message && event.message.text) {
 			let text = event.message.text
 			text = text.toLowerCase()
 			console.log("msg: " + text)
