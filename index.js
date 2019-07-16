@@ -45,6 +45,8 @@ app.post('/webhook/', async (req, res) => {
 		// postback
 		if (event.postback && event.postback.title) {
 			let title = event.postback.title;
+			title = title.toLowerCase();
+			console.log("postback msg: " + title);
 			if (title.includes("nba")) {
 				console.log("postback title contains nba")
 				crawler.getTopNews().
