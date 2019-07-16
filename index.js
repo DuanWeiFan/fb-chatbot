@@ -43,9 +43,17 @@ app.post('/webhook/', async (req, res) => {
 		let event = messaging_events[i]
 		let sender = event.sender.id
 		// postback
-		if (event.postback) {
-			console.log("Log PostBack Event:")
-			console.log(event.postback)
+		if (event.postback && event.postback.title) {
+			let title = event.postback.title;
+			if (title.includes("nba")) {
+				console.log("postback title contains nba")
+				crawler.getTopNews().
+					then((topNews) => {
+						helper.sendList(sender, topNews)
+					})
+			}
+			// console.log("Log PostBack Event:")
+			// console.log(event.postback)
 		}
 		// message post
 		else if (event.message && event.message.text) {
@@ -54,8 +62,10 @@ app.post('/webhook/', async (req, res) => {
 			console.log("msg: " + text)
 			if (text.includes("nba") || text.includes("news")) {
 				console.log("msg contains nba")
-				let topNews = await crawler.getTopNews()
-				helper.sendList(sender, topNews)
+				crawler.getTopNews().
+					then((topNews) => {
+						helper.sendList(sender, topNews)
+					})
 			} else {
 				// Echo text
 				helper.sendText(sender, "Echoing: " + text.substring(0, 100))
