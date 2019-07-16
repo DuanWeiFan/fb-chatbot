@@ -51,7 +51,7 @@ app.post('/webhook/', (req, res) => {
 				console.log("postback title contains nba")
 				crawler.getTopNews().
 					then((topNews) => {
-						helper.sendList(sender, topNews)
+						helper.sendGeneric(sender, topNews)
 					})
 			}
 		}
