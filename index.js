@@ -36,7 +36,7 @@ app.get('/webhook/', (req, res) => {
 	res.send("Wrong Token")
 })
 
-app.post('/webhook/', async (req, res) => {
+app.post('/webhook/', (req, res) => {
 	console.log(req.body.entry[0]);
 	let messaging_events = req.body.entry[0].messaging
 	for (let i = 0; i < messaging_events.length; i++) {
@@ -54,8 +54,6 @@ app.post('/webhook/', async (req, res) => {
 						helper.sendList(sender, topNews)
 					})
 			}
-			// console.log("Log PostBack Event:")
-			// console.log(event.postback)
 		}
 		// message post
 		else if (event.message && event.message.text) {
