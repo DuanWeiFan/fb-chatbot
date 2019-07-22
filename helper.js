@@ -1,12 +1,13 @@
 
-const request = require('request')
-const aws = require('aws-sdk')
+const request = require('request');
+
+// get FB ACCESS_TOKEN from environment variable
+const token = process.env.ACCESS_TOKEN;
 
 // export modules
 var exports = module.exports = {};
 
-// let token = "EAAFihsSyj70BAIS1FZBcTKXcBB2BRZAMaU01JteEaSV6Hqu4ySHtvH7c1zEdokCW0645lw8ex5AcpGmd2aZCsxm2ZB6VZAgXMZCPfjxT6RMerraU9iHGe2Ljy6hIgVZBEIV1lnmIOY8XmmZApRqdgzvKMoO5kpTCfydGMnYjiooNhwZDZD"
-const token = process.env.ACCESS_TOKEN;
+
 const sendRequest = (sender, messageData) => {
     request({
 		url: "https://graph.facebook.com/v2.6/me/messages",
@@ -18,20 +19,20 @@ const sendRequest = (sender, messageData) => {
 		}
 	}, (error, response, body) => {
 		if (error) {
-            console.log("sending error")
-            console.log(error)
+            console.log("sending error");
+            console.log(error);
 		} else if (response.body.error) {
-            console.log("response body error")
-            console.log(response.body.error)
+            console.log("response body error");
+            console.log(response.body.error);
 		}
 	})
-}
+};
 
 
 exports.sendText = (sender, text) => {
-    let messageData = {text: text}
+    let messageData = {text: text};
     sendRequest(sender, messageData);
-}
+};
 
 exports.sendBottons = (sender) => {
     let messageData = {
@@ -54,22 +55,22 @@ exports.sendBottons = (sender) => {
 				]
 			}
 		}
-    }
-    sendRequest(sender, messageData)
-}
+    };
+    sendRequest(sender, messageData);
+};
 
 exports.sendList = (sender, topNews) => {
     const maximumViews = 4;
     let elements = new Array()
     for (let i = 0; i < Math.min(topNews.length, maximumViews); i++) {
-        let element = {}
-        element.title = topNews[i].title
+        let element = {};
+        element.title = topNews[i].title;
         element.buttons = [{
             title: "View",
             type: "web_url",
             url: topNews[i].url
-        }]
-        elements.push(element)
+        }];
+        elements.push(element);
     }
     let messageData = {
         attachment: {
@@ -86,22 +87,22 @@ exports.sendList = (sender, topNews) => {
 
 			}
 		}
-    }
-    sendRequest(sender, messageData)
-}
+    };
+    sendRequest(sender, messageData);
+};
 
 exports.sendGeneric = (sender, topNews) => {
     const maximumViews = 8;
-    let elements = new Array()
+    let elements = new Array();
     for (let i = 0; i < Math.min(topNews.length, maximumViews); i++) {
-        let element = {}
-        element.title = topNews[i].title
+        let element = {};
+        element.title = topNews[i].title;
         element.buttons = [{
             title: "View",
             type: "web_url",
             url: topNews[i].url
-        }]
-        elements.push(element)
+        }];
+        elements.push(element);
     }
     let messageData = {
         attachment: {
@@ -111,6 +112,6 @@ exports.sendGeneric = (sender, topNews) => {
                 elements: elements
 			}
 		}
-    }
-    sendRequest(sender, messageData)
-}
+    };
+    sendRequest(sender, messageData);
+};
