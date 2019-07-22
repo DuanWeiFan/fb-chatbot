@@ -1,11 +1,12 @@
 
 const request = require('request')
+const aws = require('aws-sdk')
 
 // export modules
 var exports = module.exports = {};
 
-let token = "EAAFihsSyj70BAIS1FZBcTKXcBB2BRZAMaU01JteEaSV6Hqu4ySHtvH7c1zEdokCW0645lw8ex5AcpGmd2aZCsxm2ZB6VZAgXMZCPfjxT6RMerraU9iHGe2Ljy6hIgVZBEIV1lnmIOY8XmmZApRqdgzvKMoO5kpTCfydGMnYjiooNhwZDZD"
-
+// let token = "EAAFihsSyj70BAIS1FZBcTKXcBB2BRZAMaU01JteEaSV6Hqu4ySHtvH7c1zEdokCW0645lw8ex5AcpGmd2aZCsxm2ZB6VZAgXMZCPfjxT6RMerraU9iHGe2Ljy6hIgVZBEIV1lnmIOY8XmmZApRqdgzvKMoO5kpTCfydGMnYjiooNhwZDZD"
+const token = process.env.ACCESS_TOKEN;
 const sendRequest = (sender, messageData) => {
     request({
 		url: "https://graph.facebook.com/v2.6/me/messages",
