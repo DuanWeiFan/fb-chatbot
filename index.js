@@ -64,7 +64,8 @@ app.post('/webhook/', (req, res) => {
 				// quick replies
 				helper.sendQuickReplies(sender);
 			}
-			else if (text.includes("random")) {
+			else if (text.includes("easy") ||
+			text.includes("medium") || text.includes("hard")) {
 				const randomProblem = leetcodeClient.getRandomProblem(text);
 				helper.sendBottons(sender, randomProblem);
 			}

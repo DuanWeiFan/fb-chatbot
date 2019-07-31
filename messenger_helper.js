@@ -40,7 +40,7 @@ exports.sendBottons = (sender, problem) => {
 			type: "template",
 			payload: {
                 template_type: "button",
-                text: "#" + problem.getFrontendId() + "." + problem.getTitle(),
+                text: "#" + problem.getFrontendId() + ". " + problem.getTitle(),
 				buttons: [
 					{
 						type: "web_url",
