@@ -50,7 +50,6 @@ app.post('/webhook/', (req, res) => {
 			const payload = event.postback.payload;
 			switch (payload) {
 				case "Leetcode":
-				// handle Leetcode functions
 				const randomProblem = Leetcode.getRandomProblem(title);
 				helper.sendBottons(sender, randomProblem);
 				break;
@@ -63,6 +62,7 @@ app.post('/webhook/', (req, res) => {
 			console.log("msg: " + text);
 			if (text.includes("Leetcode")) {
 				// quick replies
+				helper.sendQuickReplies(sender);
 			}
 		};
 	}

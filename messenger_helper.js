@@ -80,5 +80,25 @@ exports.sendGeneric = (sender, topNews) => {
 };
 
 exports.sendQuickReplies = (sender) => {
-    //
+    let messageData = {
+        text: "Select Random Problem Level",
+        quick_replies: [
+            {
+                content_type: "text",
+                title: "random easy problems",
+                payload: "Leetcode"
+            },
+            {
+                content_type: "text",
+                title: "random medium problems",
+                payload: "Leetcode"
+            },
+            {
+                content_type: "text",
+                title: "random hard problems",
+                payload: "Leetcode"
+            }
+        ]
+    };
+    sendRequest(sender, messageData);
 };
