@@ -69,6 +69,8 @@ app.post('/webhook/', (req, res) => {
 			let title = event.postback.title;
 			title = title.toLowerCase();
 			console.log("postback msg: " + title);
+			console.log("postback event: ");
+			console.log(event.postback);
 			if (title.includes("nba")) {
 				console.log("postback title contains nba");
 				crawler.getTopNews().
