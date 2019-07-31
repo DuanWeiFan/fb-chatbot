@@ -4,7 +4,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const request = require('request');
 const crawler = require('./crawler');
-const helper = require('./helper');
+const helper = require('./messenger_helper');
+const leetcode_helper = require('./leetcode_test/leetcode_helper')
 
 const app = express();
 
@@ -14,8 +15,29 @@ app.set('port', (process.env.PORT || 5000));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
+// NBA
+// function init() {
+// 	crawler.init();
+// }
+
+// leetcode
+var problemSet;
 function init() {
-	crawler.init();
+	const options = {
+        url: "https://leetcode.com/api/problems/all",
+        headers: {
+            'Connection': 'keep-alive'
+        }
+    };
+    request.get(options, (err, res, body) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        const problemList = JSON.parse(body)['stat_status_pairs'];
+        problemSet = leetcode_helper.categorizeProblems(problemList);
+    });
+    console.log('Done Leetcode init!');
 }
 
 // init modules
@@ -53,6 +75,21 @@ app.post('/webhook/', (req, res) => {
 					then((topNews) => {
 						helper.sendGeneric(sender, topNews);
 					});
+			}
+			else if (title == "random easy problems") {
+				// random easy problems
+				const randomProblem = leetcode_helper.getRandomProblem(problemSet.getEasyProblems());
+				helper.sendBottons(sender, randomProblem);
+			}
+			else if (title == "random medium problems") {
+				// random medium problems
+				const randomProblem = leetcode_helper.getRandomProblem(problemSet.getMediumProblems());
+				helper.sendBottons(sender, randomProblem);
+			}
+			else if (title == "random hard problems") {
+				// random hard problems
+				const randomProblem = leetcode_helper.getRandomProblem(problemSet.getHardProblems());
+				helper.sendBottons(sender, randomProblem);
 			};
 		}
 		// message post

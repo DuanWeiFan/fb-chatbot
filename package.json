@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index"
+    "start": "node index",
+    "test": "nodemon ./leetcode_test/index.js"
   },
   "author": "",
   "license": "ISC",
@@ -15,5 +16,8 @@
     "express": "^4.17.1",
     "request": "^2.88.0",
     "request-promise": "^4.2.4"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.1"
   }
 }
