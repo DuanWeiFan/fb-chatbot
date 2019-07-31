@@ -27,6 +27,7 @@ class Leetcode {
             default:
             break;
         }
+        return randomProblem;
     };
 
 }

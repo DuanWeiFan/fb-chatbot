@@ -64,6 +64,10 @@ app.post('/webhook/', (req, res) => {
 				// quick replies
 				helper.sendQuickReplies(sender);
 			}
+			else if (text.includes("random")) {
+				const randomProblem = leetcodeClient.getRandomProblem(text);
+				helper.sendBottons(sender, randomProblem);
+			}
 		};
 	}
 	res.sendStatus(200);
