@@ -85,17 +85,17 @@ exports.sendQuickReplies = (sender) => {
         quick_replies: [
             {
                 content_type: "text",
-                title: "random easy problems",
+                title: "easy",
                 payload: "Leetcode"
             },
             {
                 content_type: "text",
-                title: "random medium problems",
+                title: "medium",
                 payload: "Leetcode"
             },
             {
                 content_type: "text",
-                title: "random hard problems",
+                title: "hard",
                 payload: "Leetcode"
             }
         ]

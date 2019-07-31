@@ -11,21 +11,14 @@ class Leetcode {
 
     getRandomProblem(title) {
         var randomProblem;
-        switch (title) {
-            case "random easy problems":
+        if (title.includes("easy")) {
             randomProblem = leetcode_helper.getRandomProblem(this.easyProblems);
-            break;
-            
-            case "random medium problems":
+        }
+        else if (title.includes("medium")) {
             randomProblem = leetcode_helper.getRandomProblem(this.mediumProblems);
-            break;
-            
-            case "random hard problems":
+        }
+        else if (title.includes("hard")) {
             randomProblem = leetcode_helper.getRandomProblem(this.hardProblems);
-            break;
-
-            default:
-            break;
         }
         return randomProblem;
     };
