@@ -39,9 +39,8 @@ exports.sendBottons = (sender, problem) => {
         attachment: {
 			type: "template",
 			payload: {
-				template_type: "button",
-                text: `ID:${problem.getFrontendId()}\n
-                        Title: ${problem.getTitle()}`,
+                template_type: "button",
+                text: "#" + problem.getFrontendId() + "." + problem.getTitle(),
 				buttons: [
 					{
 						type: "web_url",
