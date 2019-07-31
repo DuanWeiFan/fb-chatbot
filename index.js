@@ -14,9 +14,9 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 // leetcode
-var leetcode;
+var leetcodeClient;
 function init() {
-	leetcode = new Leetcode();
+	leetcodeClient = new Leetcode();
     console.log('Done Leetcode init!');
 }
 
@@ -50,7 +50,7 @@ app.post('/webhook/', (req, res) => {
 			const payload = event.postback.payload;
 			switch (payload) {
 				case "Leetcode":
-				const randomProblem = Leetcode.getRandomProblem(title);
+				const randomProblem = leetcodeClient.getRandomProblem(title);
 				helper.sendBottons(sender, randomProblem);
 				break;
 			}
