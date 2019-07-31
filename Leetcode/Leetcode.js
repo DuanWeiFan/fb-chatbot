@@ -1,9 +1,9 @@
-const request = require('request');
+const request = require('sync-request');
 const leetcode_helper = require('./leetcode_helper.js');
 
 class Leetcode {
     constructor() {
-        const problemSet = getAllProblems();
+        const problemSet = getAllProblemsAndCategorize();
         this.easyProblems = problemSet["easyProblems"];
         this.mediumProblems = problemSet["mediumProblems"];
         this.hardProblems = problemSet["hardProblems"];
@@ -31,23 +31,15 @@ class Leetcode {
 
 }
 
-function getAllProblems() {
-    var problemSet;
-    const options = {
-        url: "https://leetcode.com/api/problems/all",
+function getAllProblemsAndCategorize() {
+    var res = request('GET', "https://leetcode.com/api/problems/all", {
         headers: {
-            'Connection': 'keep-alive'
+            "Connection": "keep-alive"
         }
-    };
-    request.get(options, (err, res, body) => {
-        if (err) {
-            console.log(err);
-            return;
-        }
-        const problemList = JSON.parse(body)['stat_status_pairs'];
-        problemSet = leetcode_helper.categorizeProblems(problemList);
-    });
-    return problemSet;
+    })
+    var problemList = JSON.parse(res.getBody());
+    problemList = problemList['stat_status_pairs'];
+    return leetcode_helper.categorizeProblems(problemList);
 }
 
 module.exports = Leetcode;
