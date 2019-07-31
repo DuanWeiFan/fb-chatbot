@@ -60,7 +60,7 @@ app.post('/webhook/', (req, res) => {
 			let text = event.message.text;
 			text = text.toLowerCase();
 			console.log("msg: " + text);
-			if (text.includes("Leetcode")) {
+			if (text.includes("leetcode")) {
 				// quick replies
 				helper.sendQuickReplies(sender);
 			}
