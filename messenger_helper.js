@@ -54,38 +54,6 @@ exports.sendBottons = (sender, problem) => {
     sendRequest(sender, messageData);
 };
 
-exports.sendList = (sender, topNews) => {
-    const maximumViews = 4;
-    let elements = new Array()
-    for (let i = 0; i < Math.min(topNews.length, maximumViews); i++) {
-        let element = {};
-        element.title = topNews[i].title;
-        element.buttons = [{
-            title: "View",
-            type: "web_url",
-            url: topNews[i].url
-        }];
-        elements.push(element);
-    }
-    let messageData = {
-        attachment: {
-			type: "template",
-			payload: {
-                template_type: "list",
-                top_element_style: "compact",
-                elements: elements,
-                buttons: [{
-                    title: "View More",
-                    type: "postback",
-                    payload: "payload"
-                }]
-
-			}
-		}
-    };
-    sendRequest(sender, messageData);
-};
-
 exports.sendGeneric = (sender, topNews) => {
     const maximumViews = 8;
     let elements = new Array();
@@ -109,4 +77,8 @@ exports.sendGeneric = (sender, topNews) => {
 		}
     };
     sendRequest(sender, messageData);
+};
+
+exports.sendQuickReplies = (sender) => {
+    //
 };

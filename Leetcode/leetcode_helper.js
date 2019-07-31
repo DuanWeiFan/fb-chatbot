@@ -1,25 +1,29 @@
-var exports = module.exports = {};
 const request = require('request');
-const ProblemSet = require('./ProblemSet.js');
 const Problem = require('./Problem.js');
 
+var exports = module.exports = {};
+
 exports.categorizeProblems = (problemList) => {
-    var problemSet = new ProblemSet();
+    var problemSet = {
+        easyProblems: [],
+        mediumProblems: [],
+        hardProblems: []
+    }
     for (i = 0; i < problemList.length; i++) {
         problem = problemList[i];
         if (isPaidOnlyProblem(problem))
             continue;
         switch (problem["difficulty"]["level"]) {
             case 1:
-            problemSet.easyProblems.push(new Problem(problem));
+            problemSet["easyProblems"].push(new Problem(problem));
             break;
             
             case 2:
-            problemSet.mediumProblems.push(new Problem(problem));
+            problemSet["mediumProblems"].push(new Problem(problem));
             break;
 
             case 3:
-            problemSet.hardProblems.push(new Problem(problem));
+            problemSet["hardProblems"].push(new Problem(problem));
             break;
         }
     }

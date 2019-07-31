@@ -2,10 +2,8 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const request = require('request');
-const crawler = require('./crawler');
-const helper = require('./messenger_helper');
-const leetcode_helper = require('./leetcode_test/leetcode_helper')
+const helper = require('./messenger_helper.js');
+const Leetcode = require('./Leetcode/Leetcode.js')
 
 const app = express();
 
@@ -15,28 +13,10 @@ app.set('port', (process.env.PORT || 5000));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-// NBA
-// function init() {
-// 	crawler.init();
-// }
-
 // leetcode
-var problemSet;
+var leetcode;
 function init() {
-	const options = {
-        url: "https://leetcode.com/api/problems/all",
-        headers: {
-            'Connection': 'keep-alive'
-        }
-    };
-    request.get(options, (err, res, body) => {
-        if (err) {
-            console.log(err);
-            return;
-        }
-        const problemList = JSON.parse(body)['stat_status_pairs'];
-        problemSet = leetcode_helper.categorizeProblems(problemList);
-    });
+	leetcode = new Leetcode();
     console.log('Done Leetcode init!');
 }
 
@@ -45,12 +25,10 @@ init();
 
 // ROUTES
 app.get('/', async (req, res) => {
-	let topNews = await crawler.getTopNews();
-	res.send(topNews);
+	res.send("Success!");
 })
 
 // Facebook
-
 app.get('/webhook/', (req, res) => {
 	if (req.query['hub.verify_token'] === "chatbot") {
 		res.send(req.query['hub.challenge']);
@@ -66,51 +44,26 @@ app.post('/webhook/', (req, res) => {
 		let sender = event.sender.id;
 		// postback
 		if (event.postback && event.postback.title) {
-			let title = event.postback.title;
-			title = title.toLowerCase();
-			console.log("postback msg: " + title);
 			console.log("postback event: ");
 			console.log(event.postback);
-			if (title.includes("nba")) {
-				console.log("postback title contains nba");
-				crawler.getTopNews().
-					then((topNews) => {
-						helper.sendGeneric(sender, topNews);
-					});
-			}
-			else if (title == "random easy problems") {
-				// random easy problems
-				const randomProblem = leetcode_helper.getRandomProblem(problemSet.getEasyProblems());
+			const title = event.postback.title;
+			const payload = event.postback.payload;
+			switch (payload) {
+				case "Leetcode":
+				// handle Leetcode functions
+				const randomProblem = Leetcode.getRandomProblem(title);
 				helper.sendBottons(sender, randomProblem);
+				break;
 			}
-			else if (title == "random medium problems") {
-				// random medium problems
-				const randomProblem = leetcode_helper.getRandomProblem(problemSet.getMediumProblems());
-				helper.sendBottons(sender, randomProblem);
-			}
-			else if (title == "random hard problems") {
-				// random hard problems
-				const randomProblem = leetcode_helper.getRandomProblem(problemSet.getHardProblems());
-				helper.sendBottons(sender, randomProblem);
-			};
 		}
 		// message post
 		else if (event.message && event.message.text) {
 			let text = event.message.text;
 			text = text.toLowerCase();
 			console.log("msg: " + text);
-			if (text.includes("nba") || text.includes("news")) {
-				console.log("msg contains nba");
-				crawler.getTopNews().
-					then((topNews) => {
-						helper.sendList(sender, topNews);
-					});
-			} else {
-				// Echo text
-				helper.sendText(sender, "Echoing: " + text.substring(0, 100));
-				// Test button template
-				helper.sendBottons(sender);
-			};
+			if (text.includes("Leetcode")) {
+				// quick replies
+			}
 		};
 	}
 	res.sendStatus(200);
