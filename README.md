@@ -12,3 +12,8 @@ Simple Facebook Messenger Chatbot.
 1. [Heroku](https://dashboard.heroku.com/apps)
 2. [FB Messenger Platform](https://developers.facebook.com/docs/messenger-platform/)
 
+## Funtionality
+Leetcode chatbot use case:
+![Leetcode1](gifs/leetcode1.gif)
+![Leetcode2](gifs/leetcode2.gif)
+
